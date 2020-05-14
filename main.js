@@ -1,61 +1,100 @@
 chrome.runtime.onMessage.addListener(gotMessage);
 function gotMessage(request, sender, sendRequest) {
-  const todos = request["todos"];
-  console.log("todos", todos);
-  const timerValue = request["timerValue"];
-  const body = document.querySelector("body");
+  const todos = request['todos'];
+  console.log('todos', todos);
+  const timerValue = request['timerValue'];
+  const body = document.querySelector('body');
   const currentDisplay = window.getComputedStyle(body).display;
   const currentOpacity = window.getComputedStyle(body).opacity;
-  console.log("currentopacity", currentOpacity);
+  console.log('currentopacity', currentOpacity);
   const currentTransition = window.getComputedStyle(body).transition;
-  console.log("currentTransition", currentTransition);
+  console.log('currentTransition', currentTransition);
   const timerInMS = timerValue * 60000;
 
+  // all of this should be a function start() {}
+
   setTimeout(() => {
-    body.style.transition = "opacity 5s";
-    body.style.opacity = "0";
+    body.style.transition = 'opacity 5s';
+    body.style.opacity = '0';
     setTimeout(() => {
       // after display is = 'none'
-      body.style.display = "none";
-      const html = document.querySelector("html");
-      const ul = document.createElement("ul");
-      ul.setAttribute("class", "ul");
-      ul.style.marginTop = "20rem";
-      ul.style.textAlign = "center";
-      ul.style.fontSize = "4.5rem";
-      ul.style.fontFamily = "Arial, Helvetica, sans-serif";
+      body.style.display = 'none';
+      const html = document.querySelector('html');
+      const ul = document.createElement('ul');
+      ul.setAttribute('class', 'ul');
+      ul.style.marginTop = '20rem';
+      ul.style.textAlign = 'center';
+      ul.style.fontSize = '4.5rem';
+      ul.style.fontFamily = 'Arial, Helvetica, sans-serif';
 
       for (let i = 0; i < todos.length; i++) {
-        const li = document.createElement("li");
+        const li = document.createElement('li');
         li.innerText = todos[i];
-        li.setAttribute("id", `${i}`);
-        li.style.listStyle = "none";
-        li.style.fontFamily = "Arial, Helvetica, sans-serif";
+        li.setAttribute('id', `${i}`);
+        li.style.listStyle = 'none';
+        li.style.fontFamily = 'Arial, Helvetica, sans-serif';
         ul.appendChild(li);
-        li.addEventListener("click", (event) => {
+        //
+        //
+        //
+        li.addEventListener('mouseenter', () => {
+          li.style.cursor = 'pointer';
+        });
+        //
+        //
+        //
+        li.addEventListener('click', (event) => {
           const currentID = event.target.id;
           const currentItem = document.getElementById(currentID);
           //   const currentItemText = currentItem.innerText;
+
+          /*
+
+
+
+
+*/
           if (
-            window.getComputedStyle(currentItem).textDecoration !==
-            "line-through"
+            window.getComputedStyle(currentItem).textDecorationLine !==
+            'line-through'
           ) {
-            currentItem.style.textDecoration = "line-through";
+            currentItem.style.textDecorationLine = 'line-through';
+          } else {
+            currentItem.style.textDecorationLine = 'none';
           }
         });
-      }
-      const button = document.createElement("button");
-      button.innerText = "Back to Browsing!";
+      } // end of for loop
+      /*
 
-      //troubleshooting bringing back the display on button 'bring back display'
-      button.addEventListener("click", (event) => {
-        html.removeChild("ul");
-        body.style.display = currentDisplay;
-        body.style.opacity = currentOpacity;
-        setTimeout(() => {
-          body.style.transition = currentTransition;
-        }, 3000);
+
+
+*/
+
+      const button = document.createElement('button');
+      button.innerText = 'Back to Browsing!';
+      button.addEventListener('mouseenter', () => {
+        button.style.cursor = 'pointer';
       });
+
+      //
+      //
+      //
+      button.addEventListener('click', (event) => {
+        const html = document.querySelector('html');
+        html.removeChild(ul);
+        body.style.display = currentDisplay; // all elements appear but at opacity 0;
+        body.style.transition = currentTransition;
+        body.style.opacity = currentOpacity;
+        // body.style.opacity = currentOpacity;
+        // setTimeout(() => {
+        //   body.style.transition = currentTransition;
+        // }, 5000);
+
+        // check list, run another set timeout from beginning if necessary.
+      });
+      //
+      //
+
       ul.appendChild(button);
       html.prepend(ul);
 
@@ -67,8 +106,9 @@ function gotMessage(request, sender, sendRequest) {
       // if list is empty, then reward the user with some congratulations or smth idk
 
       // also fade in our stuff
-    }, 5000);
-    //fade the display out using opacity
+    }, 5000); // end of settimeout for fade out
+
+    // before ending, change the todos list
   }, timerInMS);
   /**
    *
